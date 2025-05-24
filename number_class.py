@@ -283,13 +283,13 @@ class number:
     def is_even(self) -> tuple[bool]:
         """判断是否全为偶数"""
         if isinstance(self.value, (tuple)):
-            return tuple(v % 2 == 0 for v in self.value)
+            return tuple((v % 2 == 0 for v in self.value))
         else:
             raise TypeError('Not a number(int or float)')
     def is_odd(self) -> tuple[bool]:
         """判断是否全为奇数"""
         if isinstance(self.value, (tuple)):
-            return tuple(v % 2 == 1 for v in self.value)
+            return tuple((v % 2 == 1 for v in self.value))
         else:
             raise TypeError('Not a number(int or float)')
 # 测试代码
