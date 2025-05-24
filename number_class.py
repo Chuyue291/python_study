@@ -280,6 +280,18 @@ class number:
             return number(*(round(v) for v in self.value))
         else:
             raise TypeError('Not a number(int or float)')
+    def is_even(self) -> tuple[bool]:
+        """判断是否全为偶数"""
+        if isinstance(self.value, (tuple)):
+            return tuple(v % 2 == 0 for v in self.value)
+        else:
+            raise TypeError('Not a number(int or float)')
+    def is_odd(self) -> tuple[bool]:
+        """判断是否全为奇数"""
+        if isinstance(self.value, (tuple)):
+            return tuple(v % 2 == 1 for v in self.value)
+        else:
+            raise TypeError('Not a number(int or float)')
 # 测试代码
 if __name__ == "__main__":
     # 单值测试
@@ -313,4 +325,6 @@ if __name__ == "__main__":
     print(d.__class__==number)
     a=number.create(['1+8', '2+8', '3+8'])
     print(a)
+    b=number.create(['1+8.0', '2+8.85', '3+8.0'])
+    print(b)
     
