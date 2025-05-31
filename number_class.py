@@ -1,12 +1,12 @@
 """
 number类:一个灵活的数值处理类,支持单值和多值操作
-特性：
+特性:
 1. 支持单个数值和多个数值的统一操作
-2. 实现了基本的算术运算（加减乘除）
+2. 实现了基本的算术运算(加减乘除)
 3. 支持与普通数值类型的混合运算
-4. 提供了丰富的数学函数（平方根、指数、对数等）
+4. 提供了丰富的数学函数(平方根、指数、对数等
 5. 实现了比较运算和索引操作
-6. 包含实用的数值判断方法（是否为整数、正数、负数等）
+6. 包含实用的数值判断方法(是否为整数、正数、负数等)
 """
 
 import math
@@ -16,7 +16,7 @@ class number:
         """初始化number对象
         
         Args:
-            *value: 可变参数，接受一个或多个数值
+            *value: 可变参数,接受一个或多个数值
                    - 单个数值时:创建单值number对象
                    - 多个数值时:创建多值number对象(内部使用元组存储)
         
@@ -28,7 +28,7 @@ class number:
             raise ValueError("number must be initialized with at least one value")
         if not all(isinstance(v, (int, float)) for v in value):
             raise TypeError("All values must be int or float")
-        # 如果只有一个值，直接存储该值；否则存储为元组
+        # 如果只有一个值,直接存储该值；否则存储为元组
         self.value: int | float | tuple[int | float, ...] = value[0] if len(value) == 1 else value
     def __str__(self) -> str:
         """返回对象的字符串表示
@@ -39,9 +39,9 @@ class number:
         return f'value:{self.value}'
     
     def __repr__(self) -> str:
-        """返回对象的详细字符串表示，可用于重建对象
+        """返回对象的详细字符串表示,可用于重建对象
         
-        返回格式：
+        返回格式:
         - 单值:number(值)
         - 多值:number(值1, 值2, ...)
         
@@ -55,14 +55,14 @@ class number:
     def __add__(self, other: "number | int | float") -> "number":
         """实现加法运算
         
-        规则：
+        规则:
         1. number + number:
-           - 单值+单值：直接相加
-           - 多值+多值：对应位置相加（要求长度相同）
-           - 单值+多值：不支持
+           - 单值+单值:直接相加
+           - 多值+多值:对应位置相加(要求长度相同)
+           - 单值+多值:不支持
         2. number + int/float:
-           - 单值：直接相加
-           - 多值：每个元素都加上这个数
+           - 单值:直接相加
+           - 多值:每个元素都加上这个数
            
         Args:
             other: 另一个number对象或数值
@@ -71,7 +71,7 @@ class number:
             新的number对象,包含运算结果
             
         Raises:
-            ValueError: 当试图将单值与多值相加，或多值间长度不同时
+            ValueError: 当试图将单值与多值相加,或多值间长度不同时
             TypeError: 当使用不支持的类型进行相加时
         """
         if isinstance(other, number):
@@ -107,14 +107,14 @@ class number:
     def __sub__(self, other: "number | int | float") -> "number":
         """实现减法运算
         
-        规则：
+        规则:
         1. number - number:
-           - 单值-单值：直接相减
-           - 多值-多值：对应位置相减（要求长度相同）
-           - 单值-多值：不支持
+           - 单值-单值:直接相减
+           - 多值-多值:对应位置相减(要求长度相同)
+           - 单值-多值:不支持
         2. number - int/float:
-           - 单值：直接相减
-           - 多值：每个元素都减去这个数
+           - 单值:直接相减
+           - 多值:每个元素都减去这个数
            
         Args:
             other: 另一个number对象或数值
@@ -123,7 +123,7 @@ class number:
             新的number对象,包含运算结果
             
         Raises:
-            ValueError: 当试图将单值与多值相减，或多值间长度不同时
+            ValueError: 当试图将单值与多值相减,或多值间长度不同时
             TypeError: 当使用不支持的类型进行相减时
         """
         if isinstance(other, number):
@@ -165,14 +165,14 @@ class number:
     def __mul__(self, other: "number | int | float") -> "number":
         """实现乘法运算
         
-        规则：
+        规则:
         1. number * number:
-           - 单值*单值：直接相乘
-           - 多值*多值：对应位置相乘（要求长度相同）
-           - 单值*多值：不支持
+           - 单值*单值:直接相乘
+           - 多值*多值:对应位置相乘(要求长度相同)
+           - 单值*多值:不支持
         2. number * int/float:
-           - 单值：直接相乘
-           - 多值：每个元素都乘以这个数
+           - 单值:直接相乘
+           - 多值:每个元素都乘以这个数
            
         Args:
             other: 另一个number对象或数值
@@ -181,7 +181,7 @@ class number:
             新的number对象,包含运算结果
             
         Raises:
-            ValueError: 当试图将单值与多值相乘，或多值间长度不同时
+            ValueError: 当试图将单值与多值相乘,或多值间长度不同时
             TypeError: 当使用不支持的类型进行相乘时
         """
         if isinstance(other, number):
@@ -218,14 +218,14 @@ class number:
     def __truediv__(self, other: "number | int | float") -> "number":
         """实现除法运算
         
-        规则：
+        规则:
         1. number / number:
-           - 单值/单值：直接相除
-           - 多值/多值：对应位置相除（要求长度相同）
-           - 单值/多值：不支持
+           - 单值/单值:直接相除
+           - 多值/多值:对应位置相除(要求长度相同)
+           - 单值/多值:不支持
         2. number / int/float:
-           - 单值：直接相除
-           - 多值：每个元素都除以这个数
+           - 单值:直接相除
+           - 多值:每个元素都除以这个数
            
         Args:
             other: 另一个number对象或数值
@@ -234,7 +234,7 @@ class number:
             新的number对象,包含运算结果
             
         Raises:
-            ValueError: 当试图将单值与多值相除，或多值间长度不同时
+            ValueError: 当试图将单值与多值相除,或多值间长度不同时
             TypeError: 当使用不支持的类型进行相除时
             ZeroDivisionError: 当除数为零时
         """
@@ -288,13 +288,13 @@ class number:
     def __eq__(self, other: "number | int | float") -> bool:
         """实现相等性比较
         
-        规则：
+        规则:
         1. number == number:
-           - 单值==单值：直接比较
-           - 多值==多值：要求长度相同且对应位置的值都相等
+           - 单值==单值:直接比较
+           - 多值==多值:要求长度相同且对应位置的值都相等
            - 单值==多值:永远返回False
         2. number == int/float:
-           - 单值：直接比较
+           - 单值:直接比较
            - 多值:永远返回False
            
         Args:
@@ -317,14 +317,14 @@ class number:
     def __lt__(self, other: "number | int | float") -> bool:
         """实现小于比较
         
-        规则：
+        规则:
         1. number < number:
-           - 单值<单值：直接比较
-           - 多值<多值：要求长度相同，按照元组比较规则进行比较
-           - 单值<多值：不支持，抛出异常
+           - 单值<单值:直接比较
+           - 多值<多值:要求长度相同,按照元组比较规则进行比较
+           - 单值<多值:不支持,抛出异常
         2. number < int/float:
-           - 单值：直接比较
-           - 多值：不支持，抛出异常
+           - 单值:直接比较
+           - 多值:不支持,抛出异常
            
         Args:
             other: 另一个number对象或数值
@@ -333,7 +333,7 @@ class number:
             bool: 是否小于
             
         Raises:
-            ValueError: 当试图比较单值和多值，或多值间长度不同时
+            ValueError: 当试图比较单值和多值,或多值间长度不同时
             TypeError: 当使用不支持的类型进行比较时
         """
         if isinstance(other, number):
@@ -352,14 +352,14 @@ class number:
     def __gt__(self, other: "number | int | float") -> bool:
         """实现大于比较
         
-        规则：
+        规则:
         1. number > number:
            - 单值>单值:直接比较
-           - 多值>多值:要求长度相同，按照元组比较规则进行比较
-           - 单值>多值:不支持，抛出异常
+           - 多值>多值:要求长度相同,按照元组比较规则进行比较
+           - 单值>多值:不支持,抛出异常
         2. number > int/float:
-           - 单值：直接比较
-           - 多值：不支持，抛出异常
+           - 单值:直接比较
+           - 多值:不支持,抛出异常
            
         Args:
             other: 另一个number对象或数值
@@ -368,7 +368,7 @@ class number:
             bool: 是否大于
             
         Raises:
-            ValueError: 当试图比较单值和多值，或多值间长度不同时
+            ValueError: 当试图比较单值和多值,或多值间长度不同时
             TypeError: 当使用不支持的类型进行比较时
         """
         if isinstance(other, number):
@@ -435,7 +435,7 @@ class number:
         """设置指定索引位置的值
 
         通过此方法实现下标赋值语法(如: obj[0] = 1),只适用于多值number对象。
-        对单值number对象使用此方法会引发TypeError异常。
+        對單值number對象使用此方法會引發TypeError異常。
         修改后的结果会被转换为tuple以保持不可变性。
         
         Args:
@@ -738,6 +738,8 @@ class number:
             TypeError: 当值不是数值类型时
         """
         if isinstance(self.value, (tuple, int, float)):
+            if isinstance(self.value, (int, float)):
+                return number(round(self.value))
             return number(*(round(v) for v in self.value))
         else:
             raise TypeError('Not a number(int, float, or tuple)')
@@ -754,7 +756,9 @@ class number:
             TypeError: 当值不是数值类型时
         """
         if isinstance(self.value, (tuple, int, float)):
-            return tuple((v % 2 == 0 for v in self.value))
+            if isinstance(self.value, (int, float)):
+                return (int(self.value) % 2 == 0,)
+            return tuple(int(v) % 2 == 0 for v in self.value)
         else:
             raise TypeError('Not a number(int, float, or tuple)')
 
@@ -770,23 +774,23 @@ class number:
             TypeError: 当值不是数值类型时
         """
         if isinstance(self.value, (tuple, int, float)):
-            return tuple((v % 2 == 1 for v in self.value))
+            if isinstance(self.value, (int, float)):
+                return (int(self.value) % 2 == 1,)
+            return tuple(int(v) % 2 == 1 for v in self.value)
         else:
             raise TypeError('Not a number(int, float, or tuple)')
 
     @staticmethod
-    def isa_prime(n: int) -> bool:
-        """判断一个数是否为素数
-        
-        使用试除法判断一个数是否为素数。
+    def is_prime_number(n: int) -> bool:
+        """判断一个数是否为质数的静态辅助方法
         
         Args:
             n: 要判断的整数
             
         Returns:
-            bool: 如果n是素数返回True,否则返回False
+            bool: 如果是质数返回True,否则返回False
         """
-        if n <= 1:
+        if n < 2:
             return False
         for i in range(2, int(math.sqrt(n)) + 1):
             if n % i == 0:
@@ -794,40 +798,57 @@ class number:
         return True
 
     def is_prime(self) -> tuple[bool]:
-        """判断是否全为素数
+        """判断是否为质数
         
-        检查每个值是否为素数。值必须可以转换为整数。
+        检查每个值是否为质数。值会被转换为整数进行判断。
+        只有大于1的整数才可能是质数。
         
         Returns:
-            tuple[bool]: 每个位置的布尔值表示对应的数是否为素数
+            tuple[bool]: 每个位置的布尔值表示对应的数是否为质数
             
         Raises:
             TypeError: 当值不是数值类型时
+            ValueError: 当值为负数或非整数时
         """
-        if isinstance(self.value, tuple):
-            return tuple((number.isa_prime(int(v)) if float(v).is_integer() else False for v in self.value))
+        if isinstance(self.value, (tuple, int, float)):
+            if isinstance(self.value, (int, float)):
+                if not float(self.value).is_integer():
+                    raise ValueError("Value must be an integer")
+                return (self.is_prime_number(int(self.value)),)
+            
+            # 检查所有值是否为整数
+            if not all(float(v).is_integer() for v in self.value):
+                raise ValueError("All values must be integers")
+                
+            return tuple(self.is_prime_number(int(v)) for v in self.value)
         else:
             raise TypeError('Not a number(int, float, or tuple)')
     
-    def is_square_of_any_number(self,object:"number",squared_number:int|float) -> tuple[bool]:
-        """判断是否为任意数的任意乘方
+    def is_square_of_any_number(self, object: "number", squared_number: int | float) -> tuple[bool]:
+        """判断一个数是否是另一个数的平方
         
-        检查self中的每个值是否是object中对应位置的值的squared_number次方。
+        检查object中的每个值的平方是否等于squared_number。
         
         Args:
-            object: 另一个number对象,包含基数
-            squared_number: 指数值
+            object: 要检查的number对象
+            squared_number: 要比较的平方数
             
         Returns:
-            tuple[bool]: 每个位置的布尔值表示对应的关系是否成立
+            tuple[bool]: 每个位置的布尔值表示对应的数的平方是否等于squared_number
             
         Raises:
-            TypeError: 当值不是数值类型时
+            TypeError: 当参数类型不正确时
         """
-        if isinstance(self.value, (tuple, int, float)):
-            return tuple((v2 ** squared_number == v for v,v2 in zip(self.value, object.value)))
-        else:
-            raise TypeError('Not a number(int, float, or tuple)')      
+        if not isinstance(object, number):
+            raise TypeError("First argument must be a number object")
+            
+        if not isinstance(squared_number, (int, float)):
+            raise TypeError("Second argument must be int or float")
+            
+        if isinstance(object.value, (int, float)):
+            return (object.value * object.value == squared_number,)
+            
+        return tuple(v * v == squared_number for v in object.value)
         
     def __len__(self) -> int:
         """返回元素个数
@@ -848,8 +869,8 @@ class number:
             number: 反转后的新number对象
         """
         if isinstance(self.value, (int, float)):
-            return number(self.value)  # 单个数值的情况直接返回相同的值
-        return number(*reversed(self.value))  # 多个数值的情况返回反转后的新number对象
+            return number(self.value)
+        return number(*reversed(self.value))
         
     def add(self, value: "number | int | float", index: int = None) -> "number":
         """在指定位置添加新值
@@ -868,46 +889,43 @@ class number:
             TypeError: 当value不是合法的类型时
             IndexError: 当index超出范围时
         """
-        # 处理输入值
+        # 将当前值转换为列表
+        current = [self.value] if isinstance(self.value, (int, float)) else list(self.value)
+        
+        # 处理要添加的值
         if isinstance(value, number):
-            if isinstance(value.value, tuple):
-                processed_values = list(value.value)
+            if isinstance(value.value, (int, float)):
+                to_add = [value.value]
             else:
-                processed_values = [value.value]
+                to_add = list(value.value)
         elif isinstance(value, (int, float)):
-            processed_values = [value]
+            to_add = [value]
         else:
-            raise TypeError("Value must be number, int or float")
-        
-        # 根据当前对象的类型处理
-        if isinstance(self.value, (int, float)):
-            # 单值转换为元组
-            current_values = [self.value]
-        else:
-            current_values = list(self.value)
-        
-        # 在指定位置插入值
-        if index is not None:
-            if index < 0:
-                index = len(current_values) + index
-            for i, v in enumerate(processed_values):
-                current_values.insert(index + i, v)
-        else:
-            current_values.extend(processed_values)
+            raise TypeError("Value must be number object or numeric type")
             
-        return number(*current_values)
+        # 插入值
+        if index is None:
+            current.extend(to_add)
+        else:
+            if not (0 <= index <= len(current)):
+                raise IndexError("Index out of range")
+            for i, v in enumerate(to_add):
+                current.insert(index + i, v)
+                
+        # 返回新的number对象
+        return number(*current)
     
     def remove(self, value: int | list[int] | None = None, index: int | list[int] | None = None) -> "number":
         """移除指定索引位置的元素
 
-        支持通过单个索引或索引列表来移除一个或多个元素。当同时指定value和index时，index具有更高优先级。
+        支持通过单个索引或索引列表来移除一个或多个元素。当同时指定value和index时,index具有更高优先级。
         
         Args:
             value: 要移除元素的索引位置或索引列表
             index: 要移除元素的索引位置或索引列表(优先级高于value)
             
         Returns:
-            number: 移除值后的number对象(self)，支持链式调用
+            number: 移除值后的number对象(self),支持链式调用
             
         Raises:
             TypeError: 当对单值number使用此方法,或传入的索引类型不正确时
@@ -920,7 +938,7 @@ class number:
             number(1, 3, 4, 5)
             >>> n.remove([1, 3])  # 移除索引1和3的元素
             number(1, 3, 5)
-            >>> n.remove(index=[-1, 0])  # 使用负索引，移除最后一个和第一个元素
+            >>> n.remove(index=[-1, 0])  # 使用负索引,移除最后一个和第一个元素
             number(3)
         """
         if isinstance(self.value, (int, float)):
@@ -943,7 +961,7 @@ class number:
         else:
             raise TypeError(f"Index must be an integer or a list of integers, not {type(idx)}")
 
-        # 对索引进行预处理：去重、转换负索引、验证范围、从大到小排序
+        # 对索引进行预处理:去重、转换负索引、验证范围、从大到小排序
         processed_indices = set()
         for i in indices:
             if not isinstance(i, int):
@@ -1002,7 +1020,330 @@ class number:
             
         self.value = tuple(current_values)
 
+    def gcd(self, other: "number") -> "number":
+        """计算最大公约数
+        
+        如果是多值number对象,则对应位置的数字计算最大公约数。
+        要求所有数字都是整数。
+        
+        Args:
+            other: 另一个number对象
             
+        Returns:
+            number: 包含最大公约数的number对象
+            
+        Raises:
+            TypeError: 当参数类型不正确时
+            ValueError: 当值不是整数时
+        """
+        def _gcd(a: int, b: int) -> int:
+            while b:
+                a, b = b, a % b
+            return abs(a)
+            
+        if not isinstance(other, number):
+            raise TypeError("Argument must be a number object")
+            
+        if isinstance(self.value, (int, float)) and isinstance(other.value, (int, float)):
+            if not (float(self.value).is_integer() and float(other.value).is_integer()):
+                raise ValueError("Values must be integers")
+            return number(_gcd(int(self.value), int(other.value)))
+            
+        if len(self) != len(other):
+            raise ValueError("Cannot calculate GCD of numbers with different lengths")
+            
+        if not all(float(v).is_integer() for v in self.value + other.value):
+            raise ValueError("All values must be integers")
+            
+        return number(*[_gcd(int(a), int(b)) for a, b in zip(self.value, other.value)])
+        
+    def lcm(self, other: "number") -> "number":
+        """计算最小公倍数
+        
+        如果是多值number对象,则对应位置的数字计算最小公倍数。
+        要求所有数字都是整数。
+        
+        Args:
+            other: 另一个number对象
+            
+        Returns:
+            number: 包含最小公倍数的number对象
+            
+        Raises:
+            TypeError: 当参数类型不正确时
+            ValueError: 当值不是整数时
+            ZeroDivisionError: 当任一数为0时
+        """
+        def _lcm(a: int, b: int) -> int:
+            if a == 0 or b == 0:
+                raise ZeroDivisionError("Cannot calculate LCM with zero")
+            return abs(a * b) // math.gcd(a, b)
+            
+        if not isinstance(other, number):
+            raise TypeError("Argument must be a number object")
+            
+        if isinstance(self.value, (int, float)) and isinstance(other.value, (int, float)):
+            if not (float(self.value).is_integer() and float(other.value).is_integer()):
+                raise ValueError("Values must be integers")
+            return number(_lcm(int(self.value), int(other.value)))
+            
+        if len(self) != len(other):
+            raise ValueError("Cannot calculate LCM of numbers with different lengths")
+            
+        if not all(float(v).is_integer() for v in self.value + other.value):
+            raise ValueError("All values must be integers")
+            
+        return number(*[_lcm(int(a), int(b)) for a, b in zip(self.value, other.value)])
+        
+    def abs(self) -> "number":
+        """返回绝对值
+        
+        Returns:
+            number: 包含绝对值的number对象
+        """
+        if isinstance(self.value, (int, float)):
+            return number(abs(self.value))
+        return number(*(abs(v) for v in self.value))
+        
+    def power(self, n: int) -> "number":
+        """计算幂
+        
+        计算每个数的n次方。
+        
+        Args:
+            n: 指数,必须是整数
+            
+        Returns:
+            number: 包含幂运算结果的number对象
+            
+        Raises:
+            TypeError: 当n不是整数时
+        """
+        if not isinstance(n, int):
+            raise TypeError("Exponent must be an integer")
+            
+        if isinstance(self.value, (int, float)):
+            return number(pow(self.value, n))
+        return number(*(pow(v, n) for v in self.value))
+        
+    def sum(self) -> int | float:
+        """计算所有元素的和
+        
+        Returns:
+            int | float: 所有元素的和
+        """
+        if isinstance(self.value, (int, float)):
+            return self.value
+        return sum(self.value)
+        
+    def average(self) -> float:
+        """计算平均值
+        
+        Returns:
+            float: 所有元素的平均值
+        """
+        if isinstance(self.value, (int, float)):
+            return float(self.value)
+        return sum(self.value) / len(self.value)
+        
+    def min(self) -> int | float:
+        """返回最小值
+        
+        Returns:
+            int | float: 最小的元素
+        """
+        if isinstance(self.value, (int, float)):
+            return self.value
+        return min(self.value)
+        
+    def max(self) -> int | float:
+        """返回最大值
+        
+        Returns:
+            int | float: 最大的元素
+        """
+        if isinstance(self.value, (int, float)):
+            return self.value
+        return max(self.value)
+        
+    def count(self, value: int | float) -> int:
+        """计算指定值出现的次数
+        
+        Args:
+            value: 要计数的值
+            
+        Returns:
+            int: 值出现的次数
+        """
+        if isinstance(self.value, (int, float)):
+            return 1 if self.value == value else 0
+        return sum(1 for v in self.value if v == value)
+        
+    def median(self) -> float:
+        """计算中位数
+        
+        如果元素个数为奇数,返回中间的数；
+        如果元素个数为偶数,返回中间两个数的平均值。
+        
+        Returns:
+            float: 中位数
+            
+        Raises:
+            TypeError: 当对象为单值number时
+        """
+        if isinstance(self.value, (int, float)):
+            raise TypeError("Cannot calculate median of single value")
+        sorted_values = sorted(self.value)
+        n = len(sorted_values)
+        if n % 2 == 0:
+            return (sorted_values[n//2 - 1] + sorted_values[n//2]) / 2
+        return float(sorted_values[n//2])
+
+    def mode(self) -> "number":
+        """计算众数(出现次数最多的值)
+        
+        如果有多个众数,全部返回。
+        
+        Returns:
+            number: 包含众数的number对象
+        """
+        if isinstance(self.value, (int, float)):
+            return number(self.value)
+            
+        from collections import Counter
+        counts = Counter(self.value)
+        max_freq = max(counts.values())
+        modes = tuple(num for num, freq in counts.items() if freq == max_freq)
+        return number(*modes)
+
+    def variance(self) -> float:
+        """计算方差
+        
+        Returns:
+            float: 方差
+            
+        Raises:
+            TypeError: 当对象为单值number时
+        """
+        if isinstance(self.value, (int, float)):
+            raise TypeError("Cannot calculate variance of single value")
+            
+        avg = self.average()
+        return sum((x - avg) ** 2 for x in self.value) / len(self.value)
+
+    def std_dev(self) -> float:
+        """计算标准差
+        
+        Returns:
+            float: 标准差
+            
+        Raises:
+            TypeError: 当对象为单值number时
+        """
+        return math.sqrt(self.variance())
+
+    def normalize(self) -> "number":
+        """归一化处理
+        
+        将所有值缩放到[0,1]区间。
+        如果所有值相同,则返回全0序列。
+        
+        Returns:
+            number: 归一化后的number对象
+        """
+        if isinstance(self.value, (int, float)):
+            return number(1.0)
+            
+        min_val = min(self.value)
+        max_val = max(self.value)
+        if min_val == max_val:
+            return number(*(0.0 for _ in self.value))
+        return number(*((x - min_val) / (max_val - min_val) for x in self.value))
+
+    def unique(self) -> "number":
+        """返回去重后的值
+        
+        保持原有顺序。
+        
+        Returns:
+            number: 去重后的number对象
+        """
+        if isinstance(self.value, (int, float)):
+            return number(self.value)
+        seen = []
+        for x in self.value:
+            if x not in seen:
+                seen.append(x)
+        return number(*seen)
+
+    def is_sorted(self) -> bool:
+        """检查是否已排序
+        
+        Returns:
+            bool: 如果是升序排序则返回True
+        """
+        if isinstance(self.value, (int, float)):
+            return True
+        return all(a <= b for a, b in zip(self.value[:-1], self.value[1:]))
+
+    def sort(self, reverse: bool = False) -> "number":
+        """返回排序后的值
+        
+        Args:
+            reverse: 是否降序排序,默认False(升序)
+            
+        Returns:
+            number: 排序后的number对象
+        """
+        if isinstance(self.value, (int, float)):
+            return number(self.value)
+        return number(*sorted(self.value, reverse=reverse))
+
+    def cumsum(self) -> "number":
+        """计算累积和
+        
+        返回一个新的number对象,其中每个位置包含到该位置为止所有数的和。
+        
+        Returns:
+            number: 累积和的number对象
+        """
+        if isinstance(self.value, (int, float)):
+            return number(self.value)
+        result = []
+        total = 0
+        for x in self.value:
+            total += x
+            result.append(total)
+        return number(*result)
+
+    def diff(self) -> "number":
+        """计算相邻元素的差
+        
+        返回一个新的number对象,包含相邻元素的差值。
+        结果的长度比原序列少1。
+        
+        Returns:
+            number: 差值的number对象
+            
+        Raises:
+            TypeError: 当对象为单值number时
+        """
+        if isinstance(self.value, (int, float)):
+            raise TypeError("Cannot calculate differences of single value")
+        return number(*(b - a for a, b in zip(self.value[:-1], self.value[1:])))
+        
+    def __hash__(self) -> int:
+        """返回哈希值
+        
+        对于单值number,返回其值的哈希值；
+        对于多值number,返回所有值的哈希值的组合。
+        
+        Returns:
+            int: 哈希值
+        """
+        if isinstance(self.value, (int, float)):
+            return hash(self.value)
+        return hash(tuple(self.value))
 # 测试代码
 
 if __name__ == "__main__":
@@ -1019,8 +1360,8 @@ if __name__ == "__main__":
     print(f"a == b: {a == b}")
     print(f"sqrt(a) = {a.sqrt()}")
     print(f"factorial(a) = {a.factorial()}")
-    print()
-    
+    print(f"hash(a) = {hash(a)}")
+
     # 多值测试
     c = number(1, 2, 3)
     d = number(4, 5, 6)
