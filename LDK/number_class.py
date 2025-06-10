@@ -12,8 +12,7 @@ Number 类型:统一处理数值计算的核心类
 
 import math
 
-
-class Number(object):    
+class Number(object):
     __version__='1.9.8'
     def __init__(self, *value: int | float,show_mode:str='__visual__') -> None:
         """构造新的Number实例
@@ -836,31 +835,7 @@ class Number(object):
                 value_list.extend(values)
                 self.value = tuple(value_list)
 
-    @classmethod
-    def create(cls, lst: list[str] | tuple[str]) -> "Number":
-        """String列表转Number
 
-        将包含数学表达式字符串的列表或元组转换为Number对象。
-        表达式会被eval函数计算,因此必须是合法的Python表达式。
-        为安全起见,不允许使用__import__。
-
-        Args:
-            lst: 包含数学表达式字符串的列表或元组
-
-        Returns:
-            Number: 包含计算结果的Number对象
-
-        Raises:
-            ValueError: 当输入包含不安全的表达式时
-        """
-        for item in lst:
-            if isinstance(item, str) and '__import__' in item:
-                raise ValueError("Input contains potentially unsafe expressions")
-        try:
-            values = [float(eval(item)) for item in lst]
-            return cls(*values)
-        except Exception as e:
-            raise ValueError(f"Error evaluating expressions: {e}")
 
     def item_round(self, ndigits: int = 0) -> "Number":
         """对所有值进行四舍五入
@@ -1215,8 +1190,8 @@ class Number(object):
                 return self.value
             return func(initial, self.value)
 
-        import functools
-        return functools.reduce(func, self.value, initial)
+        from functools import reduce
+        return reduce(func, self.value, initial)
 
     def zip_with(self, other: "Number", func: callable) -> "Number":
         """将两个Number对象的元素通过指定函数组合
@@ -1357,79 +1332,112 @@ class Number(object):
         else:
             return Number(*(func(v) for v in self.value))
     
-def __or__(self, other:'Number') -> 'Number':
-    """位或运算符(|)的重载，对两个 Number 对象的对应元素执行或操作"""
-    return self.zip_with(other, lambda a, b: a or b)
+    def __or__(self, other:'Number') -> 'Number':
+        """位或运算符(|)的重载，对两个 Number 对象的对应元素执行或操作"""
+        return self.zip_with(other, lambda a, b: a or b)
     
-def __and__(self, other:'Number') -> 'Number':
-    """位与运算符(&)的重载，对两个 Number 对象的对应元素执行与操作"""
-    return self.zip_with(other, lambda a, b: a and b)
-    
-def __xor__(self, other:'Number') -> 'Number':
-    """位异或运算符(^)的重载，对两个 Number 对象的对应元素执行异或操作"""
-    return self.zip_with(other, lambda a, b: a ^ b)
-    
-def __invert__(self) -> 'Number':
-    """位反运算符(~)的重载，对 Number 对象的每个元素执行取反操作"""
-    return self.item_map(lambda x: not x)
-    
-def __lshift__(self, other:'Number') -> 'Number':
-    """左移运算符(<<)的重载，对两个 Number 对象的对应元素执行左移操作"""
-    return self.zip_with(other, lambda a, b: a << b)
-    
-def __rshift__(self, other:'Number') -> 'Number':
-    """右移运算符(>>)的重载，对两个 Number 对象的对应元素执行右移操作"""
-    return self.zip_with(other, lambda a, b: a >> b)
-    
-def __iadd__(self, other:'Number') -> 'Number':
-    """复合加法赋值运算符(+=)的重载，执行原地加法操作"""
-    return self.zip_with(other, lambda a, b: a + b)
-    
-def __isub__(self, other:'Number') -> 'Number':
-    """复合减法赋值运算符(-=)的重载，执行原地减法操作"""
-    return self.zip_with(other, lambda a, b: a - b)
-    
-def __imul__(self, other:'Number') -> 'Number':
-    """复合乘法赋值运算符(*=)的重载，执行原地乘法操作"""
-    return self.zip_with(other, lambda a, b: a * b)
-    
-def __itruediv__(self, other:'Number') -> 'Number':
-    """复合除法赋值运算符(/=)的重载，执行原地除法操作"""
-    return self.zip_with(other, lambda a, b: a / b)
-    
-def __ifloordiv__(self, other:'Number') -> 'Number':
-    """复合整除赋值运算符(//=)的重载，执行原地整除操作"""
-    return self.zip_with(other, lambda a, b: a // b)
-    
-def __imod__(self, other:'Number') -> 'Number':
-    """复合取模赋值运算符(%=)的重载，执行原地取模操作"""
-    return self.zip_with(other, lambda a, b: a % b)
-    
-def __ipow__(self, other:'Number') -> 'Number':
-    """复合幂运算赋值运算符(**=)的重载，执行原地幂运算"""
-    return self.zip_with(other, lambda a, b: a ** b)
-    
-def __ior__(self, other:'Number') -> 'Number':
-    """复合位或赋值运算符(|=)的重载，执行原地位或操作"""
-    return self.zip_with(other, lambda a, b: a | b)
-    
-def __ixor__(self, other:'Number') -> 'Number':
-    """复合位异或赋值运算符(^=)的重载，执行原地位异或操作"""
-    return self.zip_with(other, lambda a, b: a ^ b)
-    
-def __iand__(self, other:'Number') -> 'Number':
-    """复合位与赋值运算符(&=)的重载，执行原地位与操作"""
-    return self.zip_with(other, lambda a, b: a & b)
-    
-def __ilshift__(self, other:'Number') -> 'Number':
-    """复合左移赋值运算符(<<=)的重载，执行原地左移操作"""
-    return self.zip_with(other, lambda a, b: a << b)
-    
-def __irshift__(self, other:'Number') -> 'Number':
-    """复合右移赋值运算符(>>=)的重载，执行原地右移操作"""
-    return self.zip_with(other, lambda a, b: a >> b)
+    def __and__(self, other:'Number') -> 'Number':
+        """位与运算符(&)的重载，对两个 Number 对象的对应元素执行与操作"""
+        return self.zip_with(other, lambda a, b: a and b)
+
+    def __xor__(self, other:'Number') -> 'Number':
+        """位异或运算符(^)的重载，对两个 Number 对象的对应元素执行异或操作"""
+        return self.zip_with(other, lambda a, b: a ^ b)
+
+    def __invert__(self) -> 'Number':
+        """位反运算符(~)的重载，对 Number 对象的每个元素执行取反操作"""
+        return self.item_map(lambda x: not x)
+
+    def __lshift__(self, other:'Number') -> 'Number':
+        """左移运算符(<<)的重载，对两个 Number 对象的对应元素执行左移操作"""
+        return self.zip_with(other, lambda a, b: a << b)
+
+    def __rshift__(self, other:'Number') -> 'Number':
+        """右移运算符(>>)的重载，对两个 Number 对象的对应元素执行右移操作"""
+        return self.zip_with(other, lambda a, b: a >> b)
+
+    def __iadd__(self, other:'Number') -> 'Number':
+        """复合加法赋值运算符(+=)的重载，执行原地加法操作"""
+        return self.zip_with(other, lambda a, b: a + b)
+
+    def __isub__(self, other:'Number') -> 'Number':
+        """复合减法赋值运算符(-=)的重载，执行原地减法操作"""
+        return self.zip_with(other, lambda a, b: a - b)
+
+    def __imul__(self, other:'Number') -> 'Number':
+        """复合乘法赋值运算符(*=)的重载，执行原地乘法操作"""
+        return self.zip_with(other, lambda a, b: a * b)
+
+    def __itruediv__(self, other:'Number') -> 'Number':
+        """复合除法赋值运算符(/=)的重载，执行原地除法操作"""
+        return self.zip_with(other, lambda a, b: a / b)
+
+    def __ifloordiv__(self, other:'Number') -> 'Number':
+        """复合整除赋值运算符(//=)的重载，执行原地整除操作"""
+        return self.zip_with(other, lambda a, b: a // b)
+
+    def __imod__(self, other:'Number') -> 'Number':
+        """复合取模赋值运算符(%=)的重载，执行原地取模操作"""
+        return self.zip_with(other, lambda a, b: a % b)
+
+    def __ipow__(self, other:'Number') -> 'Number':
+        """复合幂运算赋值运算符(**=)的重载，执行原地幂运算"""
+        return self.zip_with(other, lambda a, b: a ** b)
+
+    def __ior__(self, other:'Number') -> 'Number':
+        """复合位或赋值运算符(|=)的重载，执行原地位或操作"""
+        return self.zip_with(other, lambda a, b: a | b)
+
+    def __ixor__(self, other:'Number') -> 'Number':
+        """复合位异或赋值运算符(^=)的重载，执行原地位异或操作"""
+        return self.zip_with(other, lambda a, b: a ^ b)
+
+    def __iand__(self, other:'Number') -> 'Number':
+        """复合位与赋值运算符(&=)的重载，执行原地位与操作"""
+        return self.zip_with(other, lambda a, b: a & b)
+
+    def __ilshift__(self, other:'Number') -> 'Number':
+        """复合左移赋值运算符(<<=)的重载，执行原地左移操作"""
+        return self.zip_with(other, lambda a, b: a << b)
+
+    def __irshift__(self, other:'Number') -> 'Number':
+        """复合右移赋值运算符(>>=)的重载，执行原地右移操作"""
+        return self.zip_with(other, lambda a, b: a >> b)
+    def bin(self) -> str | list:
+        """返回Number对象的二进制表示形式
+        
+        Returns:
+            str | list: 如果是单值返回该值的二进制字符串表示，
+                    如果是多值返回包含每个值的二进制字符串表示的列表
+        """
+        if isinstance(self.value, (int, float)):
+            return bin(int(self.value))
+        return [bin(int(v)) for v in self.value]
+
+    def hex(self) -> str | list:
+        """返回Number对象的十六进制表示形式
+        
+        Returns:
+            str | list: 如果是单值返回该值的十六进制字符串表示，
+                    如果是多值返回包含每个值的十六进制字符串表示的列表
+        """
+        if isinstance(self.value, (int, float)):
+            return hex(int(self.value))
+        return [hex(int(v)) for v in self.value]
+
+    def oct(self) -> str | list:
+        """返回Number对象的八进制表示形式
+        
+        Returns:
+            str | list: 如果是单值返回该值的八进制字符串表示，
+                    如果是多值返回包含每个值的八进制字符串表示的列表
+        """
+        if isinstance(self.value, (int, float)):
+            return oct(int(self.value))
+        return [oct(int(v)) for v in self.value]
+
 if __name__ == "__main__":
     a=Number(9,8,7,show_mode='__value__')
     print(a.count(1))
     print(Number.__version__)
-
+    print(a.bin())
