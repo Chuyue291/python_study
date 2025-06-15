@@ -1,18 +1,20 @@
-"""
-Number 类型:统一处理数值计算的核心类
 
-主要特性:
-1. 统一的单值/多值操作接口
-2. 完整的数学运算符支持(+,-,*,/)
-3. 内置数值类型兼容性
-4. 丰富的数学函数库(sqrt, exp, log等)
-5. 支持数组式访问和比较
-6. 强大的数据分析功能
-"""
 
 import math
-
+from collections.abc import Callable
 class Number(object):
+    """
+    Number 类型:统一处理数值计算的核心类
+
+    主要特性:
+    1. 统一的单值/多值操作接口
+    2. 完整的数学运算符支持(+,-,*,/)
+    3. 内置数值类型兼容性
+    4. 丰富的数学函数库(sqrt, exp, log等)
+    5. 支持数组式访问和比较
+    6. 强大的数据分析功能
+    """
+    # 类主体
     __version__='1.9.8'
     def __init__(self, *value: int | float,show_mode:str='__visual__') -> None:
         """构造新的Number实例
@@ -1334,11 +1336,11 @@ class Number(object):
     
     def __or__(self, other:'Number') -> 'Number':
         """位或运算符(|)的重载，对两个 Number 对象的对应元素执行或操作"""
-        return self.zip_with(other, lambda a, b: a or b)
+        return self.zip_with(other, lambda a, b: a | b)
     
     def __and__(self, other:'Number') -> 'Number':
         """位与运算符(&)的重载，对两个 Number 对象的对应元素执行与操作"""
-        return self.zip_with(other, lambda a, b: a and b)
+        return self.zip_with(other, lambda a, b: a & b)
 
     def __xor__(self, other:'Number') -> 'Number':
         """位异或运算符(^)的重载，对两个 Number 对象的对应元素执行异或操作"""
@@ -1346,7 +1348,7 @@ class Number(object):
 
     def __invert__(self) -> 'Number':
         """位反运算符(~)的重载，对 Number 对象的每个元素执行取反操作"""
-        return self.item_map(lambda x: not x)
+        return self.item_map(lambda x: ~x)
 
     def __lshift__(self, other:'Number') -> 'Number':
         """左移运算符(<<)的重载，对两个 Number 对象的对应元素执行左移操作"""
@@ -1403,6 +1405,13 @@ class Number(object):
     def __irshift__(self, other:'Number') -> 'Number':
         """复合右移赋值运算符(>>=)的重载，执行原地右移操作"""
         return self.zip_with(other, lambda a, b: a >> b)
+
+    def __rshift__(self, other) -> 'Number':
+        """右移运算符的重载，对两个 Number 对象的对应元素执行右移操作"""
+        return self.zip_with(other, lambda a, b: b >> a)
+
+
+
     def bin(self) -> str | list:
         """返回Number对象的二进制表示形式
         
@@ -1436,8 +1445,324 @@ class Number(object):
             return oct(int(self.value))
         return [oct(int(v)) for v in self.value]
 
+    def moving_average(self, window_size: int) -> 'Number':
+        """计算移动平均值
+
+        使用指定大小的滑动窗口计算移动平均值。对单值返回其本身,
+        对多值返回一个新的Number对象,其长度比原序列少window_size-1。
+
+        Args:
+            window_size (int): 窗口大小,必须为正整数且不大于序列长度
+
+        Returns:
+            Number: 包含移动平均值的新Number对象
+
+        Raises:
+            ValueError: 当window_size小于1或大于序列长度时
+            TypeError: 当对单值Number使用此方法时
+        """
+        if isinstance(self.value, (int, float)):
+            raise TypeError("Cannot calculate moving average of single value")
+
+        if not isinstance(window_size, int) or window_size < 1:
+            raise ValueError("Window size must be a positive integer")
+
+        if window_size > len(self.value):
+            raise ValueError("Window size cannot be larger than sequence length")
+
+        if window_size == 1:
+            return self
+
+        # 计算移动平均
+        result = []
+        for i in range(len(self.value) - window_size + 1):
+            window = self.value[i:i + window_size]
+            avg = sum(window) / window_size
+            result.append(avg)
+
+        return Number(*result)
+
+    def cumulative_stats(self) -> dict[str, 'Number']:
+        """计算累积统计量
+
+        计算序列的累积统计量,包括：
+        - 累积和
+        - 累积均值
+        - 累积最大值
+        - 累积最小值
+
+        Returns:
+            dict[str, Number]: 包含各种累积统计量的字典：
+                - 'sum': 累积和
+                - 'mean': 累积均值
+                - 'max': 累积最大值
+                - 'min': 累积最小值
+
+        Raises:
+            TypeError: 当对单值Number使用此方法时
+        """
+        if isinstance(self.value, (int, float)):
+            raise TypeError("Cannot calculate cumulative stats of single value")
+
+        cum_sum = []
+        cum_mean = []
+        cum_max = []
+        cum_min = []
+
+        current_sum = 0
+        for i, v in enumerate(self.value, 1):
+            current_sum += v
+            cum_sum.append(current_sum)
+            cum_mean.append(current_sum / i)
+            cum_max.append(max(self.value[:i]))
+            cum_min.append(min(self.value[:i]))
+
+        return {
+            'sum': Number(*cum_sum),
+            'mean': Number(*cum_mean),
+            'max': Number(*cum_max),
+            'min': Number(*cum_min)
+        }
+
+
+
+    @classmethod
+    def linspace(cls,start: float, stop: float, num: int = 50) -> 'Number':
+        """生成等距序列
+
+        在指定的区间[start, stop]内生成num个等距的数。
+        这是一个类方法,不需要实例化即可调用。
+
+        Args:
+            start (float): 序列的起始值
+            stop (float): 序列的结束值
+            num (int): 要生成的数的个数,默认为50
+
+        Returns:
+            Number: 包含等距序列的Number对象
+
+        Raises:
+            ValueError: 当num小于1时
+        """
+        if num < 1:
+            raise ValueError("Number of points must be at least 1")
+
+        if num == 1:
+            return Number(start)
+
+        step = (stop - start) / (num - 1)
+        return cls(*(start + i * step for i in range(num)))
+
+    # 一些静态方法
+    @staticmethod
+    def add(numbers_a:list[int|float],numbers_b:list[int|float]) -> list[int|float]:
+        """对两个列表中的对应元素执行加法操作
+
+        Args:
+            numbers_a (list[int|float]): 第一个列表
+            numbers_b (list[int|float]): 第二个列表
+
+        Returns:
+            list[int|float]: 包含对应元素加法结果的列表
+        """
+        return [a + b for a, b in zip(numbers_a, numbers_b)]
+
+    @staticmethod
+    def sub(numbers_a:list[int|float],numbers_b:list[int|float]) -> list[int|float]:
+        """对两个列表中的对应元素执行减法操作
+
+        Args:
+            numbers_a (list[int|float]): 第一个列表
+            numbers_b (list[int|float]): 第二个列表
+        Returns:
+            list[int|float]: 包含对应元素减法结果的列表
+        """
+        return [a - b for a, b in zip(numbers_a, numbers_b)]
+
+    @staticmethod
+    def mul(numbers_a:list[int|float],numbers_b:list[int|float]) -> list[int|float]:
+        """对两个列表中的对应元素执行乘法操作
+
+        Args:
+            numbers_a (list[int|float]): 第一个列表
+            numbers_b (list[int|float]): 第二个列表
+
+        Returns:
+            list[int|float]: 包含对应元素乘法结果的列表
+        """
+        return [a * b for a, b in zip(numbers_a, numbers_b)]
+
+    @staticmethod
+    def div(numbers_a:list[int|float],numbers_b:list[int|float]) -> list[int|float]:
+        """对两个列表中的对应元素执行除法操作
+
+        Args:
+            numbers_a (list[int|float]): 第一个列表
+            numbers_b (list[int|float]): 第二个列表
+        Returns:
+            list[int|float]: 包含对应元素除法结果的列表
+        """
+        return [a / b for a, b in zip(numbers_a, numbers_b)]
+
+    @staticmethod
+    def pow(numbers_a:list[int|float],numbers_b:list[int|float]) -> list[int|float]:
+        """对两个列表中的对应元素执行幂运算
+
+        Args:
+            numbers_a (list[int|float]): 第一个列表
+            numbers_b (list[int|float]): 第二个列表
+
+        Returns:
+            list[int|float]: 包含对应元素幂运算结果的列表
+        """
+        return [a ** b for a, b in zip(numbers_a, numbers_b)]
+
+    @staticmethod
+    def mod(numbers_a:list[int|float],numbers_b:list[int|float]) -> list[int|float]:
+        """对两个列表中的对应元素执行取模运算
+
+        Args:
+            numbers_a (list[int|float]): 第一个列表
+            numbers_b (list[int|float]): 第二个列表
+
+        Returns:
+            list[int|float]: 包含对应元素取模运算结果的列表
+        """
+        return [a % b for a, b in zip(numbers_a, numbers_b)]
+
+    @staticmethod
+    def stacount(numbers:list[int|float],value:int|float) -> int:
+        """统计列表中指定值的个数
+
+        Args:
+            numbers (list[int|float]): 要统计的列表
+            value (int|float): 要统计的值
+
+        Returns:
+            int: 指定值的个数
+        """
+        return numbers.count(value)
+
+    @staticmethod
+    def stazip_with(numbers_a:list[int|float],numbers_b:list[int|float],func:Callable) -> list[int|float]:
+        """对两个列表中的对应元素执行指定函数操作
+
+        Args:
+            numbers_a (list[int|float]): 第一个列表
+            numbers_b (list[int|float]): 第二个列表
+            func (Callable[int|float,int|float]): 要执行的函数
+
+        Returns:
+            list[int|float]: 包含对应元素函数操作结果的列表
+        """
+        return [func(a, b) for a, b in zip(numbers_a, numbers_b)]
+
+    @staticmethod
+    def stamax(numbers:list[int|float]) -> int|float:
+        """返回列表中的最大值
+
+        Args:
+            numbers (list[int|float]): 要查找最大值的列表
+
+        Returns:
+            int|float: 列表中的最大值
+        """
+        return max(numbers)
+
+    @staticmethod
+    def stamin(numbers:list[int|float]) -> int|float:
+        """返回列表中的最小值
+
+        Args:
+            numbers (list[int|float]): 要查找最小值的列表
+
+        Returns:
+            int|float: 列表中的最小值
+        """
+        return min(numbers)
+
+    @staticmethod
+    def stasum(numbers:list[int|float]) -> int|float:
+        """返回列表中所有元素的和
+
+        Args:
+            numbers (list[int|float]): 要计算和的列表
+
+        Returns:
+            int|float: 列表中所有元素的和
+        """
+        return sum(numbers)
+
+    @staticmethod
+    def staaverage(numbers:list[int|float]) -> int|float:
+        """返回列表中所有元素的平均值
+
+        Args:
+            numbers (list[int|float]): 要计算平均值的列表
+
+        Returns:
+            int|float: 列表中所有元素的平均值
+        """
+        return sum(numbers) / len(numbers)
+
+    @staticmethod
+    def stabin(number:int|float) -> str:
+        """将整数或浮点数转换为二进制字符串
+
+        Args:
+            number (int|float): 要转换的整数或浮点数
+
+        Returns:
+            str: 二进制字符串
+        """
+        return bin(int(number))[1:]
+
+    @staticmethod
+    def stahex(number:int|float) -> str:
+        """将整数或浮点数转换为十六进制字符串
+
+        Args:
+            number (int|float): 要转换的整数或浮点数
+
+        Returns:
+            str: 十六进制字符串
+        """
+        return hex(int(number))[2:]
+
+    @staticmethod
+    def staoct(number:int|float) -> str:
+        """将整数或浮点数转换为八进制字符串
+
+        Args:
+            number (int|float): 要转换的整数或浮点数
+
+        Returns:
+            str: 八进制字符串
+        """
+        return oct(int(number))[2:]
+
+    @staticmethod
+    def round(number:int|float,ndigits:int=0) -> int|float:
+        """将浮点数四舍五入为指定的小数位数
+
+        Args:
+            number (int|float): 要四舍五入的浮点数
+            ndigits (int, optional): 要保留的小数位数. Defaults to 0.
+
+        Returns:
+            int|float: 四舍五入后的结果
+        """
+        return round(number,ndigits)
+
+    def __round__(self, n=None):
+        return round(*self.value, n)
+
+
+
 if __name__ == "__main__":
     a=Number(9,8,7,show_mode='__value__')
     print(a.count(1))
     print(Number.__version__)
     print(a.bin())
+    b=Number(9,0.9,1,2,4,5,2,7.92,show_mode='__value__')
+    print(b.average())
